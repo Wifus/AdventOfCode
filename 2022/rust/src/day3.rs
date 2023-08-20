@@ -1,22 +1,18 @@
-use std::collections::HashSet;
-
 fn as_priority(char: char) -> u64 {
     match char {
         'a'..='z' => char as u64 - 96,
         'A'..='Z' => char as u64 - 38,
-        _ => panic!("{}", format!("Unexpected character '{char}' in the input")),
+        _ => unreachable!(),
     }
 }
 
 pub fn part_one(input: String) -> u64 {
     input
         .lines()
-        .map(|line| line.split_at(line.len() / 2))
-        .map(|(sack1, sack2)| {
-            let sack1 = HashSet::<_>::from_iter(sack1.chars());
-            let sack2 = HashSet::<_>::from_iter(sack2.chars());
+        .map(|line: &str| {
+            let (sack1, sack2) = line.split_at(line.len() / 2);
 
-            as_priority(sack1.intersection(&sack2).next().unwrap().clone())
+            as_priority(sack1.chars().filter(|&c| sack2.contains(c)).next().unwrap())
         })
         .sum()
 }
@@ -26,17 +22,13 @@ pub fn part_two(input: String) -> u64 {
         .lines()
         .collect::<Vec<_>>()
         .chunks(3)
-        .map(|w| {
-            let sack1 = HashSet::<_>::from_iter(w[0].chars());
-            let sack2 = HashSet::<_>::from_iter(w[1].chars());
-            let sack3 = HashSet::<_>::from_iter(w[2].chars());
-
+        .map(|chunk| {
             as_priority(
-                HashSet::<_>::from_iter(sack1.intersection(&sack2).map(|&x| x.clone()))
-                    .intersection(&sack3)
+                chunk[0]
+                    .chars()
+                    .filter(|&c| chunk[1].contains(c) && chunk[2].contains(c))
                     .next()
-                    .unwrap()
-                    .clone(),
+                    .unwrap(),
             )
         })
         .sum()
