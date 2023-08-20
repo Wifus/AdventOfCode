@@ -29,9 +29,9 @@ pub fn part_two(input: String) -> u64 {
     input
         .lines()
         .map(|line| {
-            let (elf1, elf2) = parse_line(line);
+            let (e1, e2) = parse_line(line);
 
-            (elf1.start.max(elf2.start) <= elf1.end.min(elf2.end)) as u64
+            (e1.start.max(e2.start) <= e1.end.min(e2.end)) as u64
         })
         .sum()
 }
