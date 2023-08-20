@@ -1,46 +1,16 @@
 pub fn part_one(input: String) -> u64 {
-    let parsed = input
-        .split("\r\n")
-        .map(|s| s.parse::<u64>())
-        .collect::<Vec<_>>();
-
-    let mut max = 0;
-    let mut counter = 0;
-
-    for row in parsed {
-        match row {
-            Ok(value) => {
-                counter += value;     
-            },
-            Err(_) => {
-                max = std::cmp::max(max, counter);
-                counter = 0;
-            },
-        }
-    }
-
-    max
+    input
+        .split("\n\n")
+        .map(|values| values.lines().map(|v| v.parse::<u64>().unwrap()).sum())
+        .max()
+        .unwrap_or(0)
 }
 
 pub fn part_two(input: String) -> u64 {
-    let parsed = input
-        .split("\r\n")
-        .map(|s| s.parse::<u64>())
+    let mut counts = input
+        .split("\n\n")
+        .map(|values| values.lines().map(|v| v.parse::<u64>().unwrap()).sum())
         .collect::<Vec<_>>();
-
-    let mut counts = vec![0];
-
-    for row in parsed {
-        match row {
-            Ok(value) => {
-                let size = counts.len();
-                *counts.get_mut(size - 1).unwrap() += value;
-            },
-            Err(_) => {
-                counts.push(0);
-            },
-        }
-    }
 
     counts.sort();
     counts.iter().rev().take(3).sum()
